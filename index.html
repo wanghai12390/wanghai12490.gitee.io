@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>方块快跑💖</title>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:微软雅黑;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:#ffeef2;
+}
+
+#game{
+  width:600px;
+  height:250px;
+  background:linear-gradient(#fff0f5,#ffd6e0);
+  border:3px solid #ff7b9c;
+  border-radius:10px;
+  position:relative;
+  overflow:hidden;
+}
+
+#player{
+  width:35px;
+  height:55px;
+  background:#ff4d6d;
+  border-radius:5px;
+  position:absolute;
+  bottom:0;
+  left:60px;
+}
+
+#obstacle{
+  width:25px;
+  height:45px;
+  background:#7209b7;
+  border-radius:5px;
+  position:absolute;
+  bottom:0;
+  right:0;
+  animation: move 1.6s linear infinite;
+}
+
+@keyframes move{
+  0%{right:0}
+  100%{right:600px}
+}
+
+.jump{
+  animation:jump 0.5s ease-out;
+}
+
+@keyframes jump{
+  0%{bottom:0}
+  50%{bottom:90px}
+  100%{bottom:0}
+}
+
+#score{
+  position:absolute;
+  top:10px;
+  left:15px;
+  font-size:18px;
+  color:#c51162;
+  font-weight:bold;
+}
+
+#title{
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:18px;
+  color:#ff2b6f;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+<div id="game">
+  <div id="title">方块快跑 </div>
+  <div id="score">分数：0</div>
+  <div id="player"></div>
+  <div id="obstacle"></div>
+</div>
+
+<script>
+let player = document.getElementById("player");
+let obstacle = document.getElementById("obstacle");
+let scoreText = document.getElementById("score");
+let score = 0;
+let gameOver = false;
+
+// 跳跃
+document.addEventListener("keydown",function(){
+  if(!player.classList.contains("jump") && !gameOver){
+    player.classList.add("jump");
+    setTimeout(()=>{
+      player.classList.remove("jump");
+    },500);
+  }
+});
+
+// 手机点击也能跳
+document.getElementById("game").addEventListener("touchstart",function(){
+  if(!player.classList.contains("jump") && !gameOver){
+    player.classList.add("jump");
+    setTimeout(()=>{
+      player.classList.remove("jump");
+    },500);
+  }
+});
+
+// 计分
+setInterval(()=>{
+  if(!gameOver) score++;
+},100);
+
+// 碰撞检测
+setInterval(()=>{
+  if(gameOver) return;
+
+  scoreText.innerText = "分数：" + score;
+
+  let pTop = player.offsetTop;
+  let oLeft = obstacle.offsetLeft;
+
+  if(oLeft < 95 && oLeft > 60 && pTop > 150){
+    gameOver = true;
+    obstacle.style.animation = "none";
+    setTimeout(()=>{
+      alert("💖 游戏结束~\n你跑了："+score+"分\n真是菜啊💓");
+    },100);
+  }
+},10);
+</script>
+</body>
+</html>
